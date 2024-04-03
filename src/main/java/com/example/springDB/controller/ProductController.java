@@ -1,6 +1,5 @@
-package com.example.springDB.Controller;
+package com.example.springDB.controller;
 
-import com.example.springDB.model.Product;
 import com.example.springDB.service.ProductService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +16,7 @@ public class ProductController {
 
     private final ProductService productService;
     @GetMapping("/{name}")
-    public List<Product> getById(@PathVariable String name) {
+    public List<String> getByName(@PathVariable String name) {
         return productService.getProduct(name);
     }
 }

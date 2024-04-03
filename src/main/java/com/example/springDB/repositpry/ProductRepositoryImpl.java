@@ -1,7 +1,5 @@
 package com.example.springDB.repositpry;
 
-import com.example.springDB.mapper.ProductMapper;
-import com.example.springDB.model.Product;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -16,18 +14,21 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Repository
-@AllArgsConstructor
 public class ProductRepositoryImpl implements ProductRepository{
 
-    private String sqlText;
+    private final String sqlText;
     private final NamedParameterJdbcTemplate parameterJdbcTemplate;
 
+    public ProductRepositoryImpl(NamedParameterJdbcTemplate parameterJdbcTemplate) {
+        this.parameterJdbcTemplate = parameterJdbcTemplate;
+        this.sqlText = read("query.sql");
+    }
+
     @Override
-    public List<Product> getProduct(String name) {
-        sqlText = read("query.sql");
+    public List<String> getProduct(String name) {
         MapSqlParameterSource param = new MapSqlParameterSource();
         param.addValue("name", name);
-        return parameterJdbcTemplate.query(sqlText, param, new ProductMapper());
+        return parameterJdbcTemplate.queryForList(sqlText, param, String.class);
     }
 
     private static String read(String scriptFileName) {
